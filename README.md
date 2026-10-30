@@ -145,7 +145,7 @@ Found a security problem? Please use the private report option on this repositor
 
 ## Credits
 
-Made by [boo271](https://github.com/boo271), with development assistance from DeepSeek. Built on [sing-box](https://sing-box.sagernet.org/) and [usque](https://github.com/Diniboy1123/usque).
+Made by [boo271](https://github.com/boo271), with help from various AI-assisted tools. Built on [sing-box](https://sing-box.sagernet.org/) and [usque](https://github.com/Diniboy1123/usque).
 
 ## License
 
