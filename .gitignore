@@ -1,0 +1,23 @@
+# Build output
+.gradle/
+.kotlin/
+build/
+app/build/
+*.apk
+*.aab
+
+# Local machine configuration
+local.properties
+.idea/
+*.iml
+.DS_Store
+
+# Signing material
+keystore.properties
+creds/
+*.jks
+*.keystore
+
+# OS / editor noise
+Thumbs.db
+*.swp
