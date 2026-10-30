@@ -1,13 +1,5 @@
 package dev.opentunnel.app.ui
 
-import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,30 +40,20 @@ import dev.opentunnel.app.Diag
 import dev.opentunnel.app.data.ShareSettings
 import dev.opentunnel.app.data.ShareStore
 import dev.opentunnel.app.service.WarpMasque
+import dev.opentunnel.app.update.UpdateManager
 
 private const val SOURCE_URL = "https://github.com/boo271/opentunnel"
 
-private fun openLink(context: Context, url: String) {
-    try {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-    } catch (_: ActivityNotFoundException) {
-        val clipboard = context.getSystemService(ClipboardManager::class.java)
-        clipboard?.setPrimaryClip(ClipData.newPlainText("link", url))
-        Toast.makeText(context, "No browser found, link copied", Toast.LENGTH_SHORT).show()
-    }
-}
-
-private fun toast(context: Context, text: String, always: Boolean = false) {
-    // Android 13 and newer show their own confirmation for clipboard writes.
-    if (always || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit) {
+fun SettingsScreen(
+    onBack: () -> Unit,
+    update: UpdateManager.State,
+    onCheckUpdates: () -> Unit,
+    onOpenUpdate: () -> Unit,
+) {
     val context = LocalContext.current
+    var autoCheck by remember { mutableStateOf(UpdateManager.autoCheckEnabled()) }
     var registered by remember { mutableStateOf(WarpMasque.hasRegistration(context)) }
     var confirmForget by remember { mutableStateOf(false) }
     var importOpen by remember { mutableStateOf(false) }
@@ -226,6 +208,78 @@ fun SettingsScreen(onBack: () -> Unit) {
 
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.padding(20.dp)) {
+                    Text("Updates", fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "Checks GitHub for a newer release. Nothing is downloaded unless you ask.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            "Check automatically",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Switch(
+                            checked = autoCheck,
+                            onCheckedChange = {
+                                autoCheck = it
+                                UpdateManager.setAutoCheck(it)
+                                if (it) UpdateManager.maybeAutoCheck()
+                            },
+                        )
+                    }
+                    Text(
+                        "Once a day, when the app opens. Your profiles and tunnel are not involved.",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Text(
+                        updateStatus(update),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (update is UpdateManager.State.Error) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Row {
+                        OutlinedButton(
+                            onClick = onCheckUpdates,
+                            enabled = update !is UpdateManager.State.Checking &&
+                                update !is UpdateManager.State.Downloading &&
+                                update !is UpdateManager.State.Ready,
+                        ) {
+                            Text(
+                                if (update is UpdateManager.State.Checking) {
+                                    "Checking…"
+                                } else {
+                                    "Check for updates"
+                                }
+                            )
+                        }
+                        if (update is UpdateManager.State.Available ||
+                            update is UpdateManager.State.Downloading ||
+                            update is UpdateManager.State.Ready ||
+                            (update is UpdateManager.State.Error && update.release != null)
+                        ) {
+                            Spacer(Modifier.width(8.dp))
+                            TextButton(onClick = onOpenUpdate) {
+                                Text(if (update is UpdateManager.State.Ready) "Install" else "Update")
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
+                Column(Modifier.padding(20.dp)) {
                     Text("About", fontWeight = FontWeight.SemiBold)
                     Spacer(Modifier.height(6.dp))
                     Text(
@@ -371,4 +425,18 @@ fun SettingsScreen(onBack: () -> Unit) {
             },
         )
     }
+}
+
+private fun updateStatus(state: UpdateManager.State): String = when (state) {
+    is UpdateManager.State.Idle -> "Not checked yet."
+    is UpdateManager.State.Checking -> "Checking GitHub…"
+    is UpdateManager.State.UpToDate -> "OpenTunnel ${state.version} is the latest release."
+    is UpdateManager.State.Available -> "Version ${state.release.version} is available."
+    is UpdateManager.State.Downloading -> if (state.percent >= 0) {
+        "Downloading ${state.release.version}… ${state.percent}%"
+    } else {
+        "Downloading ${state.release.version}…"
+    }
+    is UpdateManager.State.Ready -> "Version ${state.release.version} is downloaded and verified."
+    is UpdateManager.State.Error -> state.message
 }

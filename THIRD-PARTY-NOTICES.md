@@ -1,6 +1,6 @@
 # Third-party notices
 
-OpenTunnel 0.3.3 includes the components below.
+OpenTunnel 0.3.4 includes the components below.
 
 ## sing-box / libbox
 

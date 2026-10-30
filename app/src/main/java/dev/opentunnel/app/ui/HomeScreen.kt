@@ -40,15 +40,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.opentunnel.app.data.Profile
 
+data class UpdateBanner(
+    val version: String,
+    val downloading: Boolean = false,
+    val ready: Boolean = false,
+    val percent: Int = -1,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     running: Boolean,
     status: String,
     profile: Profile,
+    update: UpdateBanner?,
     onToggle: (Boolean) -> Unit,
     onEdit: () -> Unit,
     onSettings: () -> Unit,
+    onUpdate: () -> Unit,
+    onUpdateLater: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -140,6 +150,57 @@ fun HomeScreen(
             }
 
             Spacer(Modifier.height(32.dp))
+
+            if (update != null) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
+                ) {
+                    Column(Modifier.padding(16.dp)) {
+                        Text(
+                            when {
+                                update.ready -> "Update ready"
+                                update.downloading -> "Downloading update"
+                                else -> "Update available"
+                            },
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            when {
+                                update.downloading && update.percent >= 0 ->
+                                    "Downloading OpenTunnel ${update.version}… ${update.percent}%"
+                                update.downloading ->
+                                    "Downloading OpenTunnel ${update.version}…"
+                                update.ready ->
+                                    "OpenTunnel ${update.version} is downloaded and verified."
+                                else ->
+                                    "OpenTunnel ${update.version} is available. Updating is optional."
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            TextButton(onClick = onUpdate) {
+                                Text(
+                                    when {
+                                        update.ready -> "Install"
+                                        update.downloading -> "View"
+                                        else -> "Update"
+                                    }
+                                )
+                            }
+                            if (!update.downloading) {
+                                TextButton(onClick = onUpdateLater) { Text("Later") }
+                            }
+                        }
+                    }
+                }
+                Spacer(Modifier.height(16.dp))
+            }
 
             val buttonColor by animateColorAsState(
                 targetValue = if (running) Color(0xFFB43A3A) else MaterialTheme.colorScheme.primary,

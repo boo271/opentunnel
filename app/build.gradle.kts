@@ -22,8 +22,8 @@ android {
         applicationId = "dev.opentunnel.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 7
-        versionName = "0.3.3"
+        versionCode = 8
+        versionName = "0.3.4"
 
         // libbox and usque are arm64-only; other ABIs must not install.
         ndk {
@@ -88,4 +88,5 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
+    testImplementation("junit:junit:4.13.2")
 }

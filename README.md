@@ -10,9 +10,11 @@ It does three things:
 
 There's also a "Share to PC" option, which gives a PC on your hotspot a proxy that goes through the tunnel.
 
+The app can check GitHub for a newer release and offer to install it. Updating is always optional; nothing downloads until you tap, and nothing installs without Android's confirmation.
+
 No root needed. No analytics, no app accounts, no tracking. All apps on the phone go through the tunnel (there's no split tunneling yet).
 
-Version 0.3.3, arm64 only, Android 7.0 or newer.
+Version 0.3.4, arm64 only, Android 7.0 or newer.
 
 ## What works
 
@@ -24,12 +26,14 @@ Version 0.3.3, arm64 only, Android 7.0 or newer.
 
 ## Install
 
-Get `OpenTunnel-0.3.3-arm64.apk` from the [Releases page](https://github.com/boo271/opentunnel/releases) and install it. Check the hash first if you like:
+Get `OpenTunnel-0.3.4-arm64.apk` from the [Releases page](https://github.com/boo271/opentunnel/releases) and install it. Check the hash first if you like:
 
 ```
-SHA-256: b912c4c93e4f4a2d62a88f9d8a59684c4995d52eb2b3ef94a57dfd349219d809
+SHA-256: 1a312565006568b3809113965d8b50a243fdf2dac42998f9c924c6f659ce5c29
 Signing cert SHA-256: BD:DB:37:CB:90:D9:BE:E7:BD:D3:CC:EF:A9:C8:1A:6F:80:BD:2D:D3:D2:35:70:C8:50:EB:0C:9E:56:C0:C1:2A
 ```
+
+Installing over an older version keeps your profiles and WARP registration.
 
 ## Using it
 
@@ -126,6 +130,7 @@ app/src/main/java/dev/opentunnel/app/
   data/        profiles, LAN proxy settings, vless:// parser
   service/     VpnService, sing-box config builder, WARP code
   ui/          Compose screens
+  update/      GitHub release check and verified installer
 app/libs/libbox.aar                          sing-box core
 app/src/main/jniLibs/arm64-v8a/libusque.so   usque helper
 server/setup.sh                              VPS setup script
@@ -135,7 +140,11 @@ THIRD-PARTY-NOTICES.md                       bundled components
 
 ## Privacy
 
-I don't collect anything. The only things that leave your phone are your tunnel traffic, the one-time anonymous Cloudflare registration for WARP, and DNS lookups to `1.1.1.1`. Your profiles and WARP registration are stored privately inside the app, and backups are off. Clearing the app's data wipes them.
+I don't collect anything. The only things that leave your phone are your tunnel traffic, the one-time anonymous Cloudflare registration for WARP, DNS lookups to `1.1.1.1`, and the update check if it's on.
+
+The update check asks GitHub's public API for the latest release once a day, and only when you open the app. That request includes the app version and, like any web request, your IP address. Nothing about your profiles or tunnel is sent, and you can turn the check off under **Settings > Updates**.
+
+Your profiles and WARP registration are stored privately inside the app, and backups are off. Clearing the app's data wipes them.
 
 ## Disclaimer
 
