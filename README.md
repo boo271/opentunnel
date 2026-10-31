@@ -146,8 +146,9 @@ The update check asks GitHub's public API for the latest release once a day, and
 
 Your profiles and WARP registration are stored privately inside the app, and backups are off. Clearing the app's data wipes them.
 
-## Contact
-boo271 on discord, server got bug report : https://discord.gg/6sRN93Fjsm
+## Contact & discord
+boo271 on discord
+discord link  https://discord.gg/6sRN93Fjsm
 
 ## Disclaimer
 
