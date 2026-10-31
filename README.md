@@ -146,6 +146,9 @@ The update check asks GitHub's public API for the latest release once a day, and
 
 Your profiles and WARP registration are stored privately inside the app, and backups are off. Clearing the app's data wipes them.
 
+## Contact
+boo271 on discord, server got bug report : https://discord.gg/6sRN93Fjsm
+
 ## Disclaimer
 
 This is an independent project. It is not affiliated with or endorsed by Cloudflare, Meta, or the sing-box project. WARP mode talks to Cloudflare's service with an unofficial client, and using a different SNI to get through a carrier's restrictions may go against your carrier's or Cloudflare's terms. That's your call and your responsibility. The software comes with no warranty.
