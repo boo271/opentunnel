@@ -14,7 +14,7 @@ The app can check GitHub for a newer release and offer to install it. Updating i
 
 No root needed. No analytics, no app accounts, no tracking. All apps on the phone go through the tunnel (there's no split tunneling yet).
 
-Version 0.3.4, arm64 only, Android 7.0 or newer.
+Version 0.3.5, arm64 only, Android 7.0 or newer.
 
 ## What works
 
@@ -26,10 +26,10 @@ Version 0.3.4, arm64 only, Android 7.0 or newer.
 
 ## Install
 
-Get `OpenTunnel-0.3.4-arm64.apk` from the [Releases page](https://github.com/boo271/opentunnel/releases) and install it. Check the hash first if you like:
+Get `OpenTunnel-0.3.5-arm64.apk` from the [Releases page](https://github.com/boo271/opentunnel/releases) and install it. Check the hash first if you like:
 
 ```
-SHA-256: 1a312565006568b3809113965d8b50a243fdf2dac42998f9c924c6f659ce5c29
+SHA-256: 27f6d450a951b443fc35a8413043df525528bd5b0dc371c223e5a83835fc4b9e
 Signing cert SHA-256: BD:DB:37:CB:90:D9:BE:E7:BD:D3:CC:EF:A9:C8:1A:6F:80:BD:2D:D3:D2:35:70:C8:50:EB:0C:9E:56:C0:C1:2A
 ```
 

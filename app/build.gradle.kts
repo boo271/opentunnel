@@ -22,8 +22,8 @@ android {
         applicationId = "dev.opentunnel.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 8
-        versionName = "0.3.4"
+        versionCode = 9
+        versionName = "0.3.5"
 
         // libbox and usque are arm64-only; other ABIs must not install.
         ndk {
